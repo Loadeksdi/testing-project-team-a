@@ -14,4 +14,8 @@ export class HomePage {
     async gotoEmployeeList() {
         await this.page.click('a[href="/employees"]');
     }
+
+    async gotoEmployeeAddForm() {
+        await this.page.click('a[href="/add_employee"]');
+    }
 }

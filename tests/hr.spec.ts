@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { fetchEmployees, fillEmployeeForm } from '../helpers';
 import { HomePage } from '../pages/home-page';
 import { EmployeesPage } from '../pages/employees-page';
+import { AddEmployeePage } from '../pages/add-employee-page';
 
 
 const baseUrl = 'https://a.hr.dmerej.info';
@@ -44,11 +45,14 @@ test('initial employee list is empty', async ({ page }) => {
 });
 
 test('adding an employee, add it to the list too', async ({ page }) => {
-  await page.goto(`${baseUrl}/add_employee`);
+  const home = new HomePage(page);
+  await home.gotoEmployeeAddForm();
 
-  await fillEmployeeForm(page, johnDoe);
+  await new AddEmployeePage(page).fillEmployeeForm(johnDoe);
 
-  const employees = await fetchEmployees(page, `${baseUrl}/employees`);
+  await home.gotoEmployeeList();
+
+  const employees = await new EmployeesPage(page).fetchEmployees()
   await expect(employees).toEqual([{ name: johnDoe.name, email: johnDoe.email }]);
 });
 
